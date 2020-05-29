@@ -23,20 +23,20 @@
       <el-table :data="userlist" border stripe>
         <!-- stripe: 斑马条纹
         border：边框-->
-        <el-table-column type="index" label="ID"></el-table-column>
-        <el-table-column prop="username" label="头像"></el-table-column>
-        <el-table-column prop="username" label="昵称"></el-table-column>
-        <el-table-column prop="username" label="注册时间"></el-table-column>
-        <el-table-column prop="mobile" label="手机"></el-table-column>
-        <el-table-column prop="role_name" label="类型"></el-table-column>
-        <el-table-column prop="username" label="推荐人"></el-table-column>
-        <el-table-column prop="email" label="团友"></el-table-column>
+        <el-table-column type="index" label="ID" align='center'></el-table-column>
+        <el-table-column prop="username" label="头像" align='center'></el-table-column>
+        <el-table-column prop="username" label="昵称" align='center'></el-table-column>
+        <el-table-column prop="username" label="注册时间" align='center'></el-table-column>
+        <el-table-column prop="mobile" label="手机" align='center'></el-table-column>
+        <el-table-column prop="role_name" label="类型" align='center'></el-table-column>
+        <el-table-column prop="username" label="推荐人" align='center'></el-table-column>
+        <el-table-column prop="email" label="团友" align='center'></el-table-column>
         <!-- <el-table-column label="状态">
           <template slot-scope="scope">
             <el-switch v-model="scope.row.mg_state" @change="userStateChanged(scope.row)"></el-switch>
           </template>
         </el-table-column> -->
-        <el-table-column label="操作">
+        <el-table-column label="操作" width="280px" align='center'>
           <template slot-scope="scope">
             <el-button
               type="primary"
@@ -68,7 +68,9 @@
         </el-table-column>
       </el-table>
       <!-- 分页区域 -->
-      <el-pagination
+      <!-- <div style="text-align:center"> -->
+        <el-pagination
+         style="text-align:center"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
@@ -77,6 +79,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="totle"
       ></el-pagination>
+      <!-- </div> -->
     </el-card>
 
     <!-- 添加用户的对话框 -->
@@ -136,40 +139,12 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
-
-    <!-- 分配角色对话框 -->
-    <!-- <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%" @close="setRoleDialogClosed">
-      <div>
-        <p>当前用户：{{userInfo.username}}</p>
-        <p>当前角色：{{userInfo.role_name}}</p>
-        <p>
-          分配角色：
-          <el-select
-            v-model="selectRoleId"
-            filterable
-            allow-create
-            default-first-option
-            placeholder="请选择文章标签"
-          >
-            <el-option
-              v-for="item in rolesLsit"
-              :key="item.id"
-              :label="item.roleName"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </p>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="setRoleDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
-      </span>
-    </el-dialog> -->
   </div>
 </template>
 
 <script>
 export default {
+  /*eslint-disable*/
   data () {
     // 自定义邮箱规则
     var checkEmail = (rule, value, callback) => {
@@ -198,8 +173,8 @@ export default {
         // 每页显示多少数据
         pagesize: 5
       },
-      userlist: [],
       totle: 0,
+      userlist: [],
       // 添加用户对话框
       addDialogVisible: false,
       // 用户添加
@@ -270,21 +245,21 @@ export default {
       const { data: res } = await this.$http.get('users', {
         params: this.queryInfo
       })
+      console.log(res)
       if (res.meta.status !== 200) {
         return this.$message.error('获取用户列表失败！')
       }
       this.userlist = res.data.users
-      this.totle = res.data.totle
+      this.totle = res.data.total
     },
     // 监听 pagesize改变的事件
     handleSizeChange (newSize) {
-      // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getUserList()
     },
     // 监听 页码值 改变事件
     handleCurrentChange (newSize) {
-      // console.log(newSize)
+      console.log(newSize)
       this.queryInfo.pagenum = newSize
       this.getUserList()
     },

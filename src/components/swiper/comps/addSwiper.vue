@@ -39,7 +39,7 @@
   export default {
     data() {
       return {
-        imageUrl: '',
+        imageUrl: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590722404393&di=3bfd1882df6f3e9656a3727a20447995&imgtype=0&src=http%3A%2F%2Fimage.biaobaiju.com%2Fuploads%2F20181021%2F14%2F1540102569-UKrNhEdcVi.jpg',
         form: {
         order: "",
         link: "",
@@ -56,9 +56,9 @@
         const isJPG = file.type === 'image/jpeg';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG 格式!');
-        }
+        // if (!isJPG) {
+        //   this.$message.error('上传头像图片只能是 JPG 格式!');
+        // }
         if (!isLt2M) {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }

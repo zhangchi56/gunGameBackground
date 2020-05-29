@@ -8,13 +8,19 @@
     </el-breadcrumb>
     <!-- 卡片视图 -->
     <el-card>
-      <el-row>
-        <el-col :span="6">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
-          </el-input>
-        </el-col>
-      </el-row>
+      <header class="header">
+        <el-date-picker
+        class="date"
+          v-model="value1"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+        <el-input class="input" placeholder="请输入内容">
+          <el-button slot="append" icon="el-icon-search"></el-button>
+        </el-input>
+      </header>
 
       <!-- 订单列表 -->
       <el-table :data="orderList" border stripe>
@@ -84,7 +90,7 @@
     </el-dialog>
     <!-- 展示物流进度对话框 -->
     <el-dialog title="查看物流进度" :visible.sync="progressDialogVisible" width="50%">
-    <!-- 时间线 -->
+      <!-- 时间线 -->
       <el-timeline>
         <el-timeline-item
           v-for="(activity, index) in progressInfo"
@@ -98,14 +104,14 @@
 
 <script>
 /*eslint-disable*/
-import cityData from './citydata.js'
+import cityData from "./citydata.js";
 
 export default {
-  data () {
+  data() {
     return {
       // 订单列表查询参数
       queryInfo: {
-        query: '',
+        query: "",
         pagenum: 1,
         pagesize: 10
       },
@@ -116,67 +122,110 @@ export default {
       addressDialogVisible: false,
       addressForm: {
         address1: [],
-        address2: ''
+        address2: ""
       },
       addressFormRules: {
         address1: [
-          { required: true, message: '请选择省市区县', trigger: 'blur' }
+          { required: true, message: "请选择省市区县", trigger: "blur" }
         ],
         address2: [
-          { required: true, message: '请输入详细地址', trigger: 'blur' }
+          { required: true, message: "请输入详细地址", trigger: "blur" }
         ]
       },
       cityData,
       // 物流进度对话框
       progressDialogVisible: false,
       // 物流进度
-      progressInfo: []
-    }
+      progressInfo: [],
+      //时间管理
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近三个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      },
+      value1: "",
+      value2: ""
+    };
   },
-  created () {
-    this.getOrderList()
+  created() {
+    this.getOrderList();
   },
   methods: {
-    async getOrderList () {
-      const { data: res } = await this.$http.get('orders', {
+    async getOrderList() {
+      const { data: res } = await this.$http.get("orders", {
         params: this.queryInfo
-      })
+      });
+      console.log(res);
       if (res.meta.status !== 200) {
-        return this.$message.error('获取订单列表失败！')
+        return this.$message.error("获取订单列表失败！");
       }
-      this.total = res.data.total
-      this.orderList = res.data.goods
+      this.total = res.data.total;
+      this.orderList = res.data.goods;
     },
     // 分页
-    handleSizeChange (newSize) {
-      this.queryInfo.pagesize = newSize
-      this.getOrderList()
+    handleSizeChange(newSize) {
+      this.queryInfo.pagesize = newSize;
+      this.getOrderList();
     },
-    handleCurrentChange (newSize) {
-      this.queryInfo.pagenum = newSize
-      this.getOrderList()
+    handleCurrentChange(newSize) {
+      this.queryInfo.pagenum = newSize;
+      this.getOrderList();
     },
-    showEditDialog () {
-      this.addressDialogVisible = true
+    showEditDialog() {
+      this.addressDialogVisible = true;
     },
-    addressDialogClosed () {
-      this.$refs.addressFormRef.resetFields()
+    addressDialogClosed() {
+      this.$refs.addressFormRef.resetFields();
     },
-    async showProgressDialog () {
+    async showProgressDialog() {
       // 供测试的物流单号：1106975712662
-      const { data: res } = await this.$http.get('/kuaidi/1106975712662')
+      const { data: res } = await this.$http.get("/kuaidi/1106975712662");
       if (res.meta.status !== 200) {
-        return this.$message.error('获取物流进度失败!')
+        return this.$message.error("获取物流进度失败!");
       }
-      this.progressInfo = res.data
-      this.progressDialogVisible = true
+      this.progressInfo = res.data;
+      this.progressDialogVisible = true;
     }
   }
-}
+};
 </script>
 
 <style lang="less" scoped>
 .el-cascader {
   width: 100%;
 }
+.header{
+  display: flex;
+}
+.header .input{
+  width:250px;
+  margin-left: 30px;
+}
+
 </style>

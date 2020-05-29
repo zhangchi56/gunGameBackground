@@ -2,11 +2,14 @@
   <el-container>
     <!-- 头部 -->
     <el-header>
-      <div style="margin-left:40px">
+      <div style="margin-left:20px;cursor: pointer;" @click="toHome">
         <img src="~@/assets/img/gun.png" alt />
-        <span>左轮手枪游戏后台管理系统</span>
+        <span style="font-size:16px">左轮手枪游戏后台管理系统</span>
       </div>
-      <el-button type="info" @click="logout">退出</el-button>
+      <div>
+        <div style="margin-right:20px;font-size:16px">用户名：{{123}}</div>
+      <el-button size="small" type="danger" @click="logout"><i class="el-icon-circle-close" style="padding-right:10px"></i>退出登陆</el-button>
+      </div>
     </el-header>
     <!-- 主体 -->
     <el-container>
@@ -43,7 +46,7 @@
               将index值作为导航路由-->
               <!-- 二级菜单的模板区域 -->
               <template slot="title">
-                <i class="el-icon-menu"></i>
+                <i style="padding:5px"></i>
                 <span>{{ subItem.authName}}</span>
               </template>
             </el-menu-item>
@@ -225,6 +228,9 @@ export default {
     // 保存连接的激活地址
     saveNavState(activePath) {
       window.sessionStorage.setItem("activePath", activePath);
+    },
+    toHome(){
+      this.$router.push('/home')
     }
   }
 };
